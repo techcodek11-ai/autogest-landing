@@ -162,6 +162,55 @@ body {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .content-block { padding: 0 5%; justify-content: center; text-align: center; }
-    .glass-ui { padding: 2rem; border-radius: 1.5rem; }
+    nav { padding: 1.5rem 5% !important; }
+    .logo-box { width: 40px; height: 40px; }
+    nav span { font-size: 1.25rem !important; }
+
+    .content-block { 
+        padding: 0 5%; 
+        justify-content: center; 
+        text-align: center; 
+        flex-direction: column;
+    }
+
+    #hero h1 { 
+        font-size: 3.5rem !important; 
+        line-height: 0.9 !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    #hero p { 
+        font-size: 1rem !important; 
+        max-width: 100% !important;
+        margin-bottom: 2rem !important;
+    }
+
+    #hero .flex { 
+        flex-direction: column; 
+        width: 100%; 
+        gap: 1rem;
+    }
+
+    #hero button, #hero a { 
+        width: 100%; 
+        padding: 1.25rem !important;
+    }
+
+    .glass-ui { 
+        padding: 2rem 1.5rem; 
+        border-radius: 1.5rem; 
+        max-width: 100%;
+        margin-top: 2rem;
+    }
+
+    .glass-ui h2 { font-size: 2rem !important; }
+    .glass-ui p { font-size: 0.95rem !important; }
+
+    #cta-final h2 { font-size: 3rem !important; }
+    #cta-final p { font-size: 1.1rem !important; }
+    #cta-final a { 
+        width: 100%; 
+        padding: 1.5rem !important;
+        font-size: 1.25rem !important;
+    }
 }

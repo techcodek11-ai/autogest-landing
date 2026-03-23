@@ -68,10 +68,9 @@ function init3D() {
     container.appendChild(renderer.domElement);
 
     phoneGroup = new THREE.Group();
-    phoneGroup.position.x = 2.5; // Alineado a la derecha para dejar espacio al texto
-
-    // Cuerpo del teléfono (Carcasa comentada)
-    /*
+    const isMobile = window.innerWidth < 768;
+    phoneGroup.position.x = isMobile ? 0 : 2.5;
+    if (isMobile) phoneGroup.scale.set(0.7, 0.7, 0.7);
     const bodyGeom = new THREE.ExtrudeGeometry(createRoundedRectShape(2.4, 5, 0.4), { 
         depth: 0.2, 
         bevelEnabled: true, 
@@ -87,7 +86,7 @@ function init3D() {
     const body = new THREE.Mesh(bodyGeom, bodyMat);
     body.position.z = -0.1;
     phoneGroup.add(body);
-    */
+
 
     // Pantallas (Dos para Cross-fade)
     const screenGeom = new THREE.PlaneGeometry(2.32, 4.92);
@@ -224,14 +223,16 @@ function setupScroll() {
         }
     });
 
+    const isMobile = window.innerWidth < 768;
+    
     // Cambio de texturas y Posición (Dodge Logic)
     const sectionTriggers = [
-        { trigger: "#hero", index: 0, x: 2.8, ry: -0.2 },
-        { trigger: "#intro", index: 1, x: -2.8, ry: 0.2 },
-        { trigger: "#features", index: 2, x: 2.8, ry: -0.2 },
-        { trigger: "#ui-3-section", index: 3, x: -2.8, ry: 0.2 },
-        { trigger: "#ui-4-section", index: 4, x: 2.8, ry: -0.2 },
-        { trigger: "#ui-5-section", index: 5, x: 0, ry: 0, z: -2.5 },
+        { trigger: "#hero", index: 0, x: isMobile ? 0 : 2.8, ry: isMobile ? 0 : -0.2, z: isMobile ? -5 : 0 },
+        { trigger: "#intro", index: 1, x: isMobile ? 0 : -2.8, ry: isMobile ? 0 : 0.2, z: isMobile ? -5 : 0 },
+        { trigger: "#features", index: 2, x: isMobile ? 0 : 2.8, ry: isMobile ? 0 : -0.2, z: isMobile ? -5 : 0 },
+        { trigger: "#ui-3-section", index: 3, x: isMobile ? 0 : -2.8, ry: isMobile ? 0 : 0.2, z: isMobile ? -5 : 0 },
+        { trigger: "#ui-4-section", index: 4, x: isMobile ? 0 : 2.8, ry: isMobile ? 0 : -0.2, z: isMobile ? -5 : 0 },
+        { trigger: "#ui-5-section", index: 5, x: 0, ry: 0, z: isMobile ? -4 : -2.5 },
         { trigger: "#cta-final", index: 5, x: 0, ry: 0, z: -30 }
     ];
 
@@ -241,20 +242,31 @@ function setupScroll() {
             start: "top center",
             onEnter: () => {
                 applyTexture(st.index);
-                gsap.to(phoneGroup.position, { x: st.x, z: st.z || 0, duration: 1.2, ease: "power2.inOut" });
+                gsap.to(phoneGroup.position, { 
+                    x: st.x, 
+                    y: (st.trigger === "#cta-final") ? -20 : 0,
+                    z: st.z || 0, 
+                    duration: 1.2, 
+                    ease: "power2.inOut" 
+                });
                 gsap.to(phoneGroup.rotation, { y: st.ry, duration: 1.2, ease: "power2.inOut" });
                 
                 if (st.trigger === "#cta-final") {
                     gsap.to([screenMeshA.material, screenMeshB.material], { opacity: 0, duration: 1 });
-                    gsap.to(phoneGroup.position, { y: -20, duration: 1 }); // Moverlo fuera de vista
                 }
             },
             onLeaveBack: () => {
                 const prev = sectionTriggers.find(t => t.index === st.index - 1);
                 if (prev) {
                     applyTexture(prev.index);
-                    gsap.to(phoneGroup.position, { x: st.x, y: 0, z: st.z || 0, duration: 1.2, ease: "power2.inOut" });
-                    gsap.to(phoneGroup.rotation, { y: st.ry, duration: 1.2, ease: "power2.inOut" });
+                    gsap.to(phoneGroup.position, { 
+                        x: prev.x, 
+                        y: 0, 
+                        z: prev.z || 0, 
+                        duration: 1.2, 
+                        ease: "power2.inOut" 
+                    });
+                    gsap.to(phoneGroup.rotation, { y: prev.ry, duration: 1.2, ease: "power2.inOut" });
                     
                     if (st.trigger === "#cta-final") {
                         gsap.to(activeMesh.material, { opacity: 1, duration: 1 });
