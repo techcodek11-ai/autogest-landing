@@ -223,56 +223,95 @@ function setupScroll() {
         }
     });
 
-    const isMobile = window.innerWidth < 768;
-    
-    // Cambio de texturas y Posición (Dodge Logic)
-    const sectionTriggers = [
-        { trigger: "#hero", index: 0, x: isMobile ? 0 : 2.8, ry: isMobile ? 0 : -0.2, z: isMobile ? -5 : 0 },
-        { trigger: "#intro", index: 1, x: isMobile ? 0 : -2.8, ry: isMobile ? 0 : 0.2, z: isMobile ? -5 : 0 },
-        { trigger: "#features", index: 2, x: isMobile ? 0 : 2.8, ry: isMobile ? 0 : -0.2, z: isMobile ? -5 : 0 },
-        { trigger: "#ui-3-section", index: 3, x: isMobile ? 0 : -2.8, ry: isMobile ? 0 : 0.2, z: isMobile ? -5 : 0 },
-        { trigger: "#ui-4-section", index: 4, x: isMobile ? 0 : 2.8, ry: isMobile ? 0 : -0.2, z: isMobile ? -5 : 0 },
-        { trigger: "#ui-5-section", index: 5, x: 0, ry: 0, z: isMobile ? -4 : -2.5 },
-        { trigger: "#cta-final", index: 5, x: 0, ry: 0, z: -30 }
-    ];
+    const mm = gsap.matchMedia();
 
-    sectionTriggers.forEach(st => {
-        ScrollTrigger.create({
-            trigger: st.trigger,
-            start: "top center",
-            onEnter: () => {
-                applyTexture(st.index);
-                gsap.to(phoneGroup.position, { 
-                    x: st.x, 
-                    y: (st.trigger === "#cta-final") ? -20 : 0,
-                    z: st.z || 0, 
-                    duration: 1.2, 
-                    ease: "power2.inOut" 
-                });
-                gsap.to(phoneGroup.rotation, { y: st.ry, duration: 1.2, ease: "power2.inOut" });
-                
-                if (st.trigger === "#cta-final") {
-                    gsap.to([screenMeshA.material, screenMeshB.material], { opacity: 0, duration: 1 });
-                }
-            },
-            onLeaveBack: () => {
-                const prev = sectionTriggers.find(t => t.index === st.index - 1);
-                if (prev) {
-                    applyTexture(prev.index);
+    // MOBILE: Phone stays centered
+    mm.add("(max-width: 767px)", () => {
+        const triggers = [
+            { trigger: "#hero", index: 0 },
+            { trigger: "#intro", index: 1 },
+            { trigger: "#features", index: 2 },
+            { trigger: "#ui-3-section", index: 3 },
+            { trigger: "#ui-4-section", index: 4 },
+            { trigger: "#ui-5-section", index: 5, z: -4 },
+            { trigger: "#cta-final", index: 5, y: -20 }
+        ];
+
+        triggers.forEach(st => {
+            ScrollTrigger.create({
+                trigger: st.trigger,
+                start: "top center",
+                onEnter: () => {
+                    applyTexture(st.index);
                     gsap.to(phoneGroup.position, { 
-                        x: prev.x, 
-                        y: 0, 
-                        z: prev.z || 0, 
+                        x: 0, 
+                        y: st.y || 0, 
+                        z: st.z || -5, 
                         duration: 1.2, 
                         ease: "power2.inOut" 
                     });
-                    gsap.to(phoneGroup.rotation, { y: prev.ry, duration: 1.2, ease: "power2.inOut" });
-                    
+                    gsap.to(phoneGroup.rotation, { y: 0, duration: 1.2, ease: "power2.inOut" });
                     if (st.trigger === "#cta-final") {
-                        gsap.to(activeMesh.material, { opacity: 1, duration: 1 });
+                        gsap.to([screenMeshA.material, screenMeshB.material], { opacity: 0, duration: 1 });
+                    }
+                },
+                onLeaveBack: () => {
+                    const prev = triggers.find(t => t.index === st.index - 1);
+                    if (prev) {
+                        applyTexture(prev.index);
+                        gsap.to(phoneGroup.position, { x: 0, y: 0, z: prev.z || -5, duration: 1.2, ease: "power2.inOut" });
+                        gsap.to(phoneGroup.rotation, { y: 0, duration: 1.2, ease: "power2.inOut" });
+                        if (st.trigger === "#cta-final") {
+                            gsap.to(activeMesh.material, { opacity: 1, duration: 1 });
+                        }
                     }
                 }
-            }
+            });
+        });
+    });
+
+    // DESKTOP: Phone dodges text
+    mm.add("(min-width: 768px)", () => {
+        const triggers = [
+            { trigger: "#hero", index: 0, x: 2.8, ry: -0.2 },
+            { trigger: "#intro", index: 1, x: -2.8, ry: 0.2 },
+            { trigger: "#features", index: 2, x: 2.8, ry: -0.2 },
+            { trigger: "#ui-3-section", index: 3, x: -2.8, ry: 0.2 },
+            { trigger: "#ui-4-section", index: 4, x: 2.8, ry: -0.2 },
+            { trigger: "#ui-5-section", index: 5, x: 0, ry: 0, z: -2.5 },
+            { trigger: "#cta-final", index: 5, x: 0, ry: 0, z: -30, y: -20 }
+        ];
+
+        triggers.forEach(st => {
+            ScrollTrigger.create({
+                trigger: st.trigger,
+                start: "top center",
+                onEnter: () => {
+                    applyTexture(st.index);
+                    gsap.to(phoneGroup.position, { 
+                        x: st.x, 
+                        y: st.y || 0,
+                        z: st.z || 0, 
+                        duration: 1.2, 
+                        ease: "power2.inOut" 
+                    });
+                    gsap.to(phoneGroup.rotation, { y: st.ry || 0, duration: 1.2, ease: "power2.inOut" });
+                    if (st.trigger === "#cta-final") {
+                        gsap.to([screenMeshA.material, screenMeshB.material], { opacity: 0, duration: 1 });
+                    }
+                },
+                onLeaveBack: () => {
+                    const prev = triggers.find(t => t.index === st.index - 1);
+                    if (prev) {
+                        applyTexture(prev.index);
+                        gsap.to(phoneGroup.position, { x: prev.x, y: 0, z: prev.z || 0, duration: 1.2, ease: "power2.inOut" });
+                        gsap.to(phoneGroup.rotation, { y: prev.ry || 0, duration: 1.2, ease: "power2.inOut" });
+                        if (st.trigger === "#cta-final") {
+                            gsap.to(activeMesh.material, { opacity: 1, duration: 1 });
+                        }
+                    }
+                }
+            });
         });
     });
 }
