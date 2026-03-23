@@ -95,11 +95,13 @@ function init3D() {
         transparent: true, 
         opacity: 1 
     }));
+    screenMeshA.position.z = 0.11; // Delante de la carcasa (que termina en z=0.1)
+
     screenMeshB = new THREE.Mesh(screenGeom, new THREE.MeshBasicMaterial({ 
         transparent: true, 
         opacity: 0
     }));
-    screenMeshB.position.z = 0.001; // Offset para evitar parpadeo (Z-fighting)
+    screenMeshB.position.z = 0.12; // Un poco más adelante para evitar Z-fighting
 
     activeMesh = screenMeshA;
     phoneGroup.add(screenMeshA);
