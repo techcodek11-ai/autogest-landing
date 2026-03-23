@@ -71,6 +71,8 @@ function init3D() {
     const isMobile = window.innerWidth < 768;
     phoneGroup.position.x = isMobile ? 0 : 2.5;
     if (isMobile) phoneGroup.scale.set(0.7, 0.7, 0.7);
+    // Cuerpo del teléfono (Carcasa comentada)
+    /*
     const bodyGeom = new THREE.ExtrudeGeometry(createRoundedRectShape(2.4, 5, 0.4), { 
         depth: 0.2, 
         bevelEnabled: true, 
@@ -86,6 +88,7 @@ function init3D() {
     const body = new THREE.Mesh(bodyGeom, bodyMat);
     body.position.z = -0.1;
     phoneGroup.add(body);
+    */
 
 
     // Pantallas (Dos para Cross-fade)
@@ -95,13 +98,13 @@ function init3D() {
         transparent: true, 
         opacity: 1 
     }));
-    screenMeshA.position.z = 0.3; // Fuera del volumen de la carcasa (incluyendo bevel)
+    screenMeshA.position.z = 0; 
 
     screenMeshB = new THREE.Mesh(screenGeom, new THREE.MeshBasicMaterial({ 
         transparent: true, 
         opacity: 0
     }));
-    screenMeshB.position.z = 0.31; // Offset para evitar parpadeo
+    screenMeshB.position.z = 0.001; 
 
     activeMesh = screenMeshA;
     phoneGroup.add(screenMeshA);
