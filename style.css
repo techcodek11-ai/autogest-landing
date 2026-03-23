@@ -13,6 +13,21 @@ body {
     overflow-x: hidden; 
 }
 
+<<<<<<< HEAD
+=======
+/* Animaciones Premium */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+>>>>>>> a740f06 (Initial commit: Landing Page AutoGest)
 /* Background Image logic */
 #canvas-container { 
     position: fixed; 
@@ -30,12 +45,22 @@ body {
     left: 0;
     width: 100%;
     height: 100vh;
+<<<<<<< HEAD
     background-image: url('assets/bg.png');
     background-size: cover;
     background-position: center;
     opacity: 0.15; /* Sutil para no distraer */
     z-index: -1;
     filter: grayscale(0.5) contrast(1.2);
+=======
+    background-image: url('assets/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.25; /* Sutil pero visible */
+    z-index: -1;
+    filter: brightness(0.6) contrast(1.1);
+>>>>>>> a740f06 (Initial commit: Landing Page AutoGest)
 }
 
 .section-wrapper { position: relative; z-index: 10; }
@@ -50,6 +75,7 @@ body {
 }
 
 .glass-ui { 
+<<<<<<< HEAD
     background: rgba(255, 255, 255, 0.07); 
     backdrop-filter: blur(40px); 
     border: 1px solid rgba(255, 255, 255, 0.2); 
@@ -61,6 +87,38 @@ body {
     box-shadow: 0 40px 100px rgba(0,0,0,0.9);
     z-index: 30;
     position: relative;
+=======
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(20px); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    padding: 3rem; 
+    border-radius: 2rem; 
+    max-width: 550px; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    z-index: 30;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-ui::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.glass-ui:hover::before {
+    left: 100%;
+>>>>>>> a740f06 (Initial commit: Landing Page AutoGest)
 }
 
 /* Asegurar que el contenido fuera de glass-ui sea visible */
@@ -78,6 +136,7 @@ body {
 }
 
 .logo-box {
+<<<<<<< HEAD
     width: 44px;
     height: 44px;
     background: var(--accent);
@@ -88,6 +147,13 @@ body {
     font-weight: 800;
     color: black;
     font-size: 1.5rem;
+=======
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+>>>>>>> a740f06 (Initial commit: Landing Page AutoGest)
 }
 
 /* Scroll Indicator */
