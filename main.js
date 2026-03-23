@@ -38,8 +38,12 @@ function loadTextureSecure(url, index) {
             }
 
             loadedTextures[index] = texture;
+            console.log(`[AutoGEST] 📱 Textura ${index} lista.`);
             
-            if (index === 0) applyTexture(0);
+            if (index === 0) {
+                console.log(`[AutoGEST] Aplicando textura inicial.`);
+                applyTexture(0);
+            }
         },
         undefined,
         (err) => {
@@ -94,8 +98,7 @@ function init3D() {
     }));
     screenMeshB = new THREE.Mesh(screenGeom, new THREE.MeshBasicMaterial({ 
         transparent: true, 
-        opacity: 0,
-        depthWrite: false
+        opacity: 0
     }));
     screenMeshB.position.z = 0.001; // Offset para evitar parpadeo (Z-fighting)
 
@@ -151,8 +154,12 @@ function createRoundedRectShape(width, height, radius) {
 }
 
 function applyTexture(index) {
-    if (!loadedTextures[index]) return;
+    if (!loadedTextures[index]) {
+        console.warn(`[AutoGEST] ⚠️ Intentando aplicar textura ${index} pero no está cargada.`);
+        return;
+    }
 
+    console.log(`[AutoGEST] 🔄 Cambiando a textura: ${index}`);
     const nextTexture = loadedTextures[index];
     const inactiveMesh = (activeMesh === screenMeshA) ? screenMeshB : screenMeshA;
 
@@ -238,18 +245,19 @@ function setupScroll() {
                 gsap.to(phoneGroup.rotation, { y: st.ry, duration: 1.2, ease: "power2.inOut" });
                 
                 if (st.trigger === "#cta-final") {
-                    gsap.to([screenMeshA.material, screenMeshB.material], { opacity: 0, duration: 1.2 });
+                    gsap.to([screenMeshA.material, screenMeshB.material], { opacity: 0, duration: 1 });
+                    gsap.to(phoneGroup.position, { y: -20, duration: 1 }); // Moverlo fuera de vista
                 }
             },
             onLeaveBack: () => {
                 const prev = sectionTriggers.find(t => t.index === st.index - 1);
                 if (prev) {
                     applyTexture(prev.index);
-                    gsap.to(phoneGroup.position, { x: prev.x, z: prev.z || 0, duration: 1.2, ease: "power2.inOut" });
-                    gsap.to(phoneGroup.rotation, { y: prev.ry, duration: 1.2, ease: "power2.inOut" });
+                    gsap.to(phoneGroup.position, { x: st.x, y: 0, z: st.z || 0, duration: 1.2, ease: "power2.inOut" });
+                    gsap.to(phoneGroup.rotation, { y: st.ry, duration: 1.2, ease: "power2.inOut" });
                     
                     if (st.trigger === "#cta-final") {
-                        gsap.to(activeMesh.material, { opacity: 1, duration: 1.2 });
+                        gsap.to(activeMesh.material, { opacity: 1, duration: 1 });
                     }
                 }
             }
